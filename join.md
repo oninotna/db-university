@@ -62,7 +62,7 @@ ORDER BY `degrees`.`name`, `courses`.`name`
 6. Selezionare tutti i docenti che insegnano nel Dipartimento di
 Matematica (54)
 ```SQL
-SELECT 
+SELECT DISTINCT
 `teachers`.*,
 `departments`.`name`
 FROM `teachers`
@@ -80,5 +80,23 @@ WHERE `departments`.`name` = "dipartimento di matematica"
 per ogni esame, stampando anche il voto massimo. Successivamente,
 filtrare i tentativi con voto minimo 18.
 ```SQL
+SELECT
+	`students`.`id` AS `student_id`,
+    `students`.`name`,
+	`courses`.`id` AS `course_id`,
+    `courses`.`name` AS `course_name`,
+    COUNT(*) AS count,
+    MAX(`exam_student`.`vote`) as max
+FROM `students`
+	INNER JOIN `exam_student`
+		ON `students`.`id` = `exam_student`.`student_id`
+	INNER JOIN `exams`
+		ON `exams`.`id` = `exam_student`.`exam_id`
+	INNER JOIN `courses`
+		ON `courses`.`id` = `exams`.`course_id`
+WHERE 1
+GROUP BY `students`.`id`, `courses`.`id`
+HAVING max > 18
+ORDER BY `student_id`
 ```
 
